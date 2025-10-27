@@ -1,14 +1,19 @@
-<?php 
+<?php
+session_start();
 
-    $host= 'localhost';
-    $user= 'root';
-    $psw="";
-    $dbname= 'db1';
 
-    try{
-        $conn = new PDO("mySQL:host=$host; dbname=$dbname", $user , $psw);
-    }
-    catch(Exception $e){
-        echo "Something went wrong";
-    }
-?>
+$user="root";
+$pass="";
+$server="localhost";
+$dbname="db";
+
+
+try {
+    
+    $conn =new PDO("mysql:host=$server;dbname=$dbname",$user,$pass);
+
+
+} catch (PDOException $e) {
+    echo "error: " . $e->getMessage();
+}
+ ?>
