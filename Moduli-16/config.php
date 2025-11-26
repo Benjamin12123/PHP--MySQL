@@ -1,8 +1,7 @@
 <?php
-session_start();
 
 
-$users="root";
+$user="root";
 $pass="";
 $server="localhost";
 $dbname="mms";
@@ -10,7 +9,7 @@ $dbname="mms";
 
 try {
     
-    $conn =new PDO("mysql:host=$server;dbname=$dbname",$users,$pass);
+    $conn =new PDO("mysql:host=$server;dbname=$dbname",$user,$pass);
 
 
 } catch (PDOException $e) {
