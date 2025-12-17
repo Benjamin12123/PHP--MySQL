@@ -1,26 +1,3 @@
-<?php
-session_start();
-require 'config.php';
-
-if (!isset($_SESSION["user_id"])) {
-    die("Please login first.");
-}
-
-$trainer_id = $_GET["trainer_id"];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user_id = $_SESSION["user_id"];
-    $date = $_POST["session_date"];
-    $notes = $_POST["notes"];
-
-    $stmt = $conn->prepare("INSERT INTO bookings (user_id, trainer_id, session_date, notes)
-                            VALUES (?,?,?,?)");
-    $stmt->bind_param("iiss", $user_id, $trainer_id, $date, $notes);
-    $stmt->execute();
-
-    $message = "Booking confirmed!";
-}
-?>
 
 <!DOCTYPE html>
 <html>
@@ -29,23 +6,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 
-<div class="nav">Book a Session</div>
+<?php
+session_start();
+include 'config.php';
 
-<div class="container">
-    <h2>Schedule with Trainer</h2>
 
-    <?php if (!empty($message)) echo "<p style='color:green;'>$message</p>"; ?>
+if (!isset($_SESSION['user_id'])) {
+header('Location: login.php');
+exit;
+}
 
-    <form method="POST">
-        <label>Date & Time:</label>
-        <input type="datetime-local" name="session_date" required>
 
-        <label>Notes:</label>
-        <textarea name="notes"></textarea>
+$user_id = $_SESSION['user_id'];
+$trainer_id = $_POST['trainer_id'];
+$date = $_POST['session_date'];
+$time = $_POST['session_time'];
 
-        <button type="submit">Confirm Booking</button>
-    </form>
-</div>
 
-</body>
-</html>
+$stmt = $conn->prepare("INSERT INTO bookings (user_id, trainer_id, session_date, session_time) VALUES (?, ?, ?, ?)");
+$stmt->bind_param('iiss', $user_id, $trainer_id, $date, $time);
+$stmt->execute();
+
+
+header('Location: dashboard.php');
+exit;
+?>

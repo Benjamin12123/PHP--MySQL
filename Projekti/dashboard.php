@@ -1,7 +1,3 @@
-<?php
-session_start();
-if (!isset($_SESSION["user_id"])) header("Location: login.php");
-?>
 
 <!DOCTYPE html>
 <html>
@@ -10,14 +6,32 @@ if (!isset($_SESSION["user_id"])) header("Location: login.php");
 </head>
 <body>
 
-<div class="nav">Dashboard</div>
+<a href="my_bookings.php" >My Bookings</a>
+<?php
+session_start();
+include 'config.php';
+if (!isset($_SESSION['user_id'])) {
+header('Location: login.php');
+exit;
+}
 
-<div class="container">
-    <h2>Welcome!</h2>
 
-    <a href="trainers.php"><button>Browse Trainers</button></a>
-    <a href="logout.php"><button>Logout</button></a>
-</div>
+$trainers = $conn->query("SELECT * FROM trainers");
+?>
 
-</body>
-</html>
+
+<h2>Welcome, <?php echo $_SESSION['name']; ?></h2>
+<a href="logout.php">Logout</a>
+
+
+<h3>Book a Training Session</h3>
+<form method="POST" action="book.php">
+<select name="trainer_id" required>
+<?php while ($t = $trainers->fetch_assoc()): ?>
+<option value="<?= $t['id'] ?>"><?= $t['name'] ?> - <?= $t['specialty'] ?></option>
+<?php endwhile; ?>
+</select>
+<input type="date" name="session_date" required>
+<input type="time" name="session_time" required>
+<button type="submit">Book Session</button>
+</form>
